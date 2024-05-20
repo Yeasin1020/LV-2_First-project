@@ -1,40 +1,61 @@
 // import { Schema, model, connect } from 'mongoose';
 
-export type UserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-};
+import { Model } from "mongoose";
 
-export type Guardian = {
+// student.interface.ts
+export interface TUserName {
+  firstName: string;
+  middleName?: string;  // Allow middleName to be optional
+  lastName: string;
+}
+
+export interface TGuardian {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: string;
   motherName: string;
   motherOccupation: string;
   motherContactNo: string;
-};
+}
 
-export type LocalGuardian = {
+export interface TLocalGuardian {
   name: string;
   occupation: string;
   contactNo: string;
   address: string;
-};
+}
 
-export type Student = {
+export interface TStudent {
   id: string;
-  name: UserName;
-  gender: 'male' | 'female';
-  dateOfBirth?: string;
+  password: string;
+  name: TUserName;
+  gender: 'male' | 'female' | 'other';
+  dateOfBirth: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+  bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-'; // Make optional
   presentAddress: string;
   permanentAddress: string;
-  guardian: Guardian;
-  localGuardian: LocalGuardian;
-  ProfileImg?: string;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
+  ProfileImg?: string; // Make optional
   isActive: 'active' | 'blocked';
+  isDeleted: boolean;
+}
+
+// for creating static
+
+export interface StudentModel extends Model<TStudent> {
+  isUserExists(id: string): Promise<TStudent | null>;
 };
+
+//method
+
+// for creating instance
+
+// export type StudentMethods = {
+//   isUserExists(id: string): Promise<TStudent | null>;
+// };
+
+// export type StudentModel = Model<TStudent, Record<string, never>, StudentMethods>;
